@@ -32,6 +32,39 @@ const reducer = (state = defaultState, { type, payload }) => {
         isPlaying: payload ? true : false,
       };
     }
+    case Actions.GET_SEQUENCE: {
+      return {
+        ...state,
+        sequence: state.sequence || defaultState.sequence,
+      };
+    }
+    case Actions.ADD_SEQUENCE: {
+      const sequenceId = state.sequence.map(({ id }) => id);
+      if (sequenceId.indexOf(payload.id) < 0) {
+        return {
+          ...state,
+          sequence: [...state.sequence, { ...payload }],
+        };
+      }
+      return { ...state };
+    }
+    case Actions.DELETE_SEQUENCE: {
+      return {
+        ...state,
+        sequence: state.sequence.filter(({ id }) => id !== payload),
+      };
+    }
+    case Actions.SET_SELECTED_SEQUENCE: {
+      if (!isNaN(payload) && payload !== null) {
+        return {
+          ...state,
+          selectedSequence: {
+            ...state.sequence.find(({ id }) => id === payload),
+          },
+        };
+      }
+      return { ...state, selectedSequence: undefined };
+    }
     default:
       return { ...state };
   }
@@ -49,6 +82,7 @@ export const setBPM = (state, payload) => {
 export const defaultState = {
   BPM: CONSTANTS.BPM,
   IS_PLAYING: CONSTANTS.IS_PLAYING,
-  sequence: [{}, {}, {}],
+  sequence: CONSTANTS.SEQUENCE,
+  selectedSequence: undefined,
 };
 export default reducer;

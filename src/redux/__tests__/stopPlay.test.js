@@ -1,6 +1,5 @@
 import reducer from "../reducer";
 import Actions from "../actions";
-import CONSTANTS from "../../constants";
 
 describe("Test stop and play from the reducer", () => {
   it("Gets the default stop at the start of the app", () => {
