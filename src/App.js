@@ -1,5 +1,5 @@
 import React from "react";
-import { HELLO_WORLD } from "./redux/actions";
+import Actions from "./redux/actions";
 import { HelloWorld } from "./components";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -8,7 +8,7 @@ const App = () => {
   const helloWorld = useSelector((state) => state.helloWorld);
   React.useEffect(() => {
     dispatch({
-      type: HELLO_WORLD,
+      type: Actions.HELLO_WORLD,
       payload: "hello world",
     });
   }, []);
