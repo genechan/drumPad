@@ -65,11 +65,30 @@ const reducer = (state = defaultState, { type, payload }) => {
       }
       return { ...state, selectedSequence: undefined };
     }
+    case Actions.GET_PATTERNS: {
+      if (!isNaN(payload) && payload !== null) {
+        return {
+          ...state,
+          selectedPattern: state.selectedSequence.pattern,
+        };
+      }
+      return { ...state };
+    }
+    case Actions.ADD_PATTERN: {
+      return addNewPattern(state, payload);
+    }
+    case Actions.REMOVE_PATTERN: {
+      return removePattern(state, payload);
+    }
     default:
       return { ...state };
   }
 };
-
+/**
+ * Set the beats per minute
+ * @param  {} state the Redux store
+ * @param  {} payload the number for the BPM
+ */
 export const setBPM = (state, payload) => {
   let BPM = isNaN(payload) || payload === null ? defaultState.BPM : payload;
   BPM = BPM < CONSTANTS.MIN_BPM ? CONSTANTS.MIN_BPM : BPM;
@@ -79,10 +98,61 @@ export const setBPM = (state, payload) => {
     BPM,
   };
 };
+/**
+ * Adds new pattern to a sequence
+ * @param  {} state the Redux store
+ * @param  {} payload the new pattern object
+ */
+export const addNewPattern = (state, payload) => {
+  let updatedSequence;
+  const patternIds = [...(state.patternIds || defaultState.patternIds)];
+  //INFO to preserve the order of the pattern in the sequence
+  const sequence = state.sequence.map((seq) => {
+    if (
+      seq.id === state.selectedSequence.id &&
+      patternIds.indexOf(payload.id) < 0
+    ) {
+      patternIds.push(payload.id);
+      updatedSequence = {
+        ...seq,
+        pattern: [...seq.pattern, { ...payload }],
+      };
+      return { ...updatedSequence };
+    }
+    return { ...seq };
+  });
+  return {
+    ...state,
+    sequence,
+    selectedSequence: updatedSequence,
+    selectedPattern: { ...payload },
+    patternIds,
+  };
+};
+/**
+ * Removes a pattern from the selected sequence
+ * @param  {} state the Redux store
+ * @param  {} payload the id of the pattern to remove
+ */
+export const removePattern = (state, payload) => {
+  const pattern = state.selectedSequence.pattern.filter(
+    ({ id }) => id !== payload
+  );
+  const selectedSequence = {
+    ...state.selectedSequence,
+    pattern,
+  };
+  const selectedPattern =
+    state.selectedPattern.id !== payload ? state.selectedPattern : undefined;
+  return { ...state, selectedSequence, selectedPattern };
+};
+
 export const defaultState = {
   BPM: CONSTANTS.BPM,
   IS_PLAYING: CONSTANTS.IS_PLAYING,
   sequence: CONSTANTS.SEQUENCE,
   selectedSequence: undefined,
+  selectedPattern: undefined,
+  patternIds: [...CONSTANTS.DEFAULT_PATTERN_IDS],
 };
 export default reducer;
