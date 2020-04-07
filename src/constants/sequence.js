@@ -3,6 +3,7 @@ export const makeSteps = (num) => {
   for (let i = 0; i < num; i++) {
     array.push({
       ...step,
+      id: i + 1,
     });
   }
   return [...array];

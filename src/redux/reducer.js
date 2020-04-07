@@ -80,6 +80,12 @@ const reducer = (state = defaultState, { type, payload }) => {
     case Actions.REMOVE_PATTERN: {
       return removePattern(state, payload);
     }
+    case Actions.UPDATE_SINGLE_STEP: {
+      return setSingleStep(state, payload);
+    }
+    case Actions.UPDATE_ALL_STEPS_ON_BEAT: {
+      return updateAllStepsOnBeat(state, payload);
+    }
     default:
       return { ...state };
   }
@@ -145,6 +151,71 @@ export const removePattern = (state, payload) => {
   const selectedPattern =
     state.selectedPattern.id !== payload ? state.selectedPattern : undefined;
   return { ...state, selectedSequence, selectedPattern };
+};
+/**
+ * Updates a single step in a pattern
+ * @param  {} state the Redux store
+ * @param  {} payload has the patternId and values for a column to update
+ */
+export const setSingleStep = (state, payload) => {
+  const selectedSequence = state.selectedSequence;
+  const pattern = selectedSequence.pattern.map((patternObj) => {
+    if (patternObj.id === payload.patternId) {
+      const steps = patternObj.steps.map((stepObj, index) => {
+        if (index === payload.column) {
+          return { ...stepObj, ...payload.values };
+        }
+        return { ...stepObj };
+      });
+      return { ...patternObj, steps };
+    }
+    return patternObj;
+  });
+  let newSelectedSequence;
+  const sequence = state.sequence.map((seqObj) => {
+    if (seqObj.id === selectedSequence.id) {
+      newSelectedSequence = { ...seqObj, pattern };
+      return newSelectedSequence;
+    }
+    return { ...seqObj };
+  });
+  return {
+    ...state,
+    sequence,
+    selectedSequence: newSelectedSequence,
+    selectedPattern:
+      state.selectedPattern.id === payload.patternId
+        ? undefined
+        : state.selectedPattern,
+  };
+};
+/**
+ * Update all the steps in all the patterns on the redux store for a beat
+ * @param  {} state the Redux store
+ * @param  {} payload has the column to update for all the patterns and the values to update them with
+ */
+export const updateAllStepsOnBeat = (state, payload) => {
+  const selectedSequence = {
+    ...state.selectedSequence,
+    pattern: state.selectedSequence.pattern.map((patObj) => {
+      return {
+        ...patObj,
+        steps: patObj.steps.map((stepObj, index) => {
+          if (index + 1 === payload.column) {
+            return { ...stepObj, ...payload.values };
+          }
+          return { ...stepObj };
+        }),
+      };
+    }),
+  };
+  const sequence = state.sequence.map((seqObj) => {
+    if (seqObj.id === selectedSequence.id) {
+      return { ...selectedSequence };
+    }
+    return { ...seqObj };
+  });
+  return { ...state, sequence, selectedSequence, selectedPattern: undefined };
 };
 
 export const defaultState = {
