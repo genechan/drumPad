@@ -17,4 +17,5 @@ export default {
   PATTERN_TEMPLATE: { ...patternTemplate },
   DEFAULT_PATTERN_IDS: [...defaultPattenIds],
   DEFAULT_NUM_STEPS: 16,
+  MAX_COLUMN: 16,
 };

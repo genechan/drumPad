@@ -3,11 +3,21 @@ import CONSTANTS from "../constants";
 
 const reducer = (state = defaultState, { type, payload }) => {
   switch (type) {
-    case Actions.HELLO_WORLD:
-      return {
-        ...state,
-        helloWorld: payload,
-      };
+    case Actions.LOAD_DATA: {
+      return { ...defaultState };
+    }
+    case Actions.UPDATE_TIMER_ID: {
+      return { ...state, timerId: payload };
+    }
+    case Actions.UPDATE_COLUMN_COUNT: {
+      let countColumn = state.countColumn;
+      if (countColumn >= CONSTANTS.MAX_COLUMN) {
+        countColumn = 0;
+      } else {
+        ++countColumn;
+      }
+      return { ...state, countColumn };
+    }
     case Actions.GET_BPM: {
       return {
         ...state,
@@ -220,10 +230,11 @@ export const updateAllStepsOnBeat = (state, payload) => {
 
 export const defaultState = {
   BPM: CONSTANTS.BPM,
-  IS_PLAYING: CONSTANTS.IS_PLAYING,
+  isPlaying: CONSTANTS.IS_PLAYING,
   sequence: CONSTANTS.SEQUENCE,
-  selectedSequence: undefined,
+  selectedSequence: CONSTANTS.SEQUENCE[0],
   selectedPattern: undefined,
   patternIds: [...CONSTANTS.DEFAULT_PATTERN_IDS],
+  countColumn: 1,
 };
 export default reducer;

@@ -1,23 +1,41 @@
 import React from "react";
 import Actions from "./redux/actions";
-import { HelloWorld } from "./components";
 
 import { useDispatch, useSelector } from "react-redux";
 const App = () => {
   const dispatch = useDispatch();
-  const helloWorld = useSelector((state) => state.helloWorld);
+  const isPlaying = useSelector((store) => store.isPlaying);
+  const timerId = useSelector((store) => store.timerId);
+  const countColumn = useSelector((store) => store.countColumn);
   React.useEffect(() => {
     dispatch({
-      type: Actions.HELLO_WORLD,
-      payload: "hello world",
+      type: Actions.LOAD_DATA,
     });
   }, []);
-
-  return (
-    <div>
-      {helloWorld}
-      <HelloWorld />
-    </div>
-  );
+  React.useEffect(() => {
+    if (isPlaying && timerId === undefined) {
+      const id = setInterval(() => {
+        dispatch({ type: Actions.UPDATE_COLUMN_COUNT });
+        dispatch({
+          type: Actions.UPDATE_ALL_STEPS_ON_BEAT,
+          payload: {
+            column: countColumn,
+            values: { focus: true },
+          },
+        });
+      }, 1000);
+      dispatch({
+        type: Actions.UPDATE_TIMER_ID,
+        payload: id,
+      });
+    } else if (!isPlaying) {
+      clearInterval(timerId);
+      dispatch({
+        type: Actions.UPDATE_TIMER_ID,
+        payload: undefined,
+      });
+    }
+  }, [isPlaying, timerId]);
+  return <div>LOADING</div>;
 };
 export default App;
