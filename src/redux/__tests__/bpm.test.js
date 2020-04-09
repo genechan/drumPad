@@ -74,7 +74,7 @@ describe("Test for BPM Beats per minute", () => {
       )
     ).toStrictEqual({
       ...defaultState,
-      BPM: CONSTANTS.MIN_BPM,
+      BPM: 0,
     });
   });
   it("Set the default BPM when given above the max", () => {

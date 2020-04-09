@@ -98,7 +98,7 @@ const reducer = (state = defaultState, { type, payload }) => {
  */
 export const setBPM = (state, payload) => {
   let BPM = isNaN(payload) || payload === null ? defaultState.BPM : payload;
-  BPM = BPM < CONSTANTS.MIN_BPM ? CONSTANTS.MIN_BPM : BPM;
+  BPM = BPM < 0 ? 0 : BPM;
   BPM = BPM > CONSTANTS.MAX_BPM ? CONSTANTS.MAX_BPM : BPM;
   return {
     ...state,
