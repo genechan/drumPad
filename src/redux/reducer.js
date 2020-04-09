@@ -9,15 +9,6 @@ const reducer = (state = defaultState, { type, payload }) => {
     case Actions.UPDATE_TIMER_ID: {
       return { ...state, timerId: payload };
     }
-    case Actions.UPDATE_COLUMN_COUNT: {
-      let countColumn = state.countColumn;
-      if (countColumn >= CONSTANTS.MAX_COLUMN) {
-        countColumn = 0;
-      } else {
-        ++countColumn;
-      }
-      return { ...state, countColumn };
-    }
     case Actions.GET_BPM: {
       return {
         ...state,
@@ -211,10 +202,10 @@ export const updateAllStepsOnBeat = (state, payload) => {
       return {
         ...patObj,
         steps: patObj.steps.map((stepObj, index) => {
-          if (index + 1 === payload.column) {
+          if (index + 1 === state.countColumn) {
             return { ...stepObj, ...payload.values };
           }
-          return { ...stepObj };
+          return { ...stepObj, focus: false };
         }),
       };
     }),
@@ -225,7 +216,19 @@ export const updateAllStepsOnBeat = (state, payload) => {
     }
     return { ...seqObj };
   });
-  return { ...state, sequence, selectedSequence, selectedPattern: undefined };
+  let countColumn = state.countColumn;
+  if (countColumn >= CONSTANTS.MAX_COLUMN) {
+    countColumn = 1;
+  } else {
+    ++countColumn;
+  }
+  return {
+    ...state,
+    sequence,
+    selectedSequence,
+    selectedPattern: undefined,
+    countColumn,
+  };
 };
 
 export const defaultState = {
