@@ -1,10 +1,20 @@
 import React from "react";
-
+import styled from "styled-components";
 const Button = ({ label = "button", onClick }) => {
   return (
-    <button type="button" onClick={onClick}>
+    <StyledButton type="button" onClick={onClick}>
       {label}
-    </button>
+    </StyledButton>
   );
 };
+
+const StyledButton = styled.button`
+  width: 5em;
+  padding: 1em;
+  margin: 0.25em;
+  font-weight: bolder;
+  border-radius: 5em;
+  background: silver;
+  outline: none;
+`;
 export default Button;
