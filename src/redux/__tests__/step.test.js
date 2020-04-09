@@ -12,10 +12,12 @@ describe("Test the step features", () => {
       active: true,
       focus: true,
     };
+    let newPattern;
     const pattern = selectedSequence.pattern.map((patternObj) => {
       if (patternObj.id === patternId) {
+        newPattern = { ...patternObj };
         const steps = patternObj.steps.map((stepObj, index) => {
-          if (index === column) {
+          if (index + 1 === column) {
             return { ...stepObj, ...values };
           }
           return { ...stepObj };
@@ -50,7 +52,7 @@ describe("Test the step features", () => {
         ...selectedSequence,
         pattern,
       },
-      selectedPattern: CONSTANTS.PATTERN_TEMPLATE,
+      selectedPattern: newPattern,
     });
   });
   it("Sets all the steps in a column for all pattern given a column index", () => {
@@ -63,11 +65,11 @@ describe("Test the step features", () => {
     const selectedSequence = { ...sequence[0] };
     const newSelectedSequence = {
       ...selectedSequence,
-      pattern: selectedSequence.pattern.map((patObj, index) => {
+      pattern: selectedSequence.pattern.map((patObj) => {
         return {
           ...patObj,
-          steps: patObj.steps.map((stepObj, index) => {
-            if (column === index + 1) {
+          steps: patObj.steps.map((stepObj) => {
+            if (column === stepObj.id) {
               return { ...stepObj, ...values };
             }
             return { ...stepObj };
@@ -83,10 +85,7 @@ describe("Test the step features", () => {
     });
     expect(
       reducer(
-        {
-          sequence,
-          selectedSequence,
-        },
+        { countColumn: column, sequence, selectedSequence },
         {
           type: Actions.UPDATE_ALL_STEPS_ON_BEAT,
           payload: {
@@ -96,6 +95,7 @@ describe("Test the step features", () => {
         }
       )
     ).toStrictEqual({
+      countColumn: column + 1,
       sequence: newSequence,
       selectedSequence: newSelectedSequence,
       selectedPattern: undefined,

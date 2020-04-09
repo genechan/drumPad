@@ -157,14 +157,16 @@ export const removePattern = (state, payload) => {
 /**
  * Updates a single step in a pattern
  * @param  {} state the Redux store
- * @param  {} payload has the patternId and values for a column to update
+ * @param  {} payload has the patternId, column and values object for the correct step to update
  */
 export const setSingleStep = (state, payload) => {
   const selectedSequence = state.selectedSequence;
+  let selectedPattern;
   const pattern = selectedSequence.pattern.map((patternObj) => {
     if (patternObj.id === payload.patternId) {
+      selectedPattern = { ...patternObj };
       const steps = patternObj.steps.map((stepObj, index) => {
-        if (index === payload.column) {
+        if (index + 1 === payload.column) {
           return { ...stepObj, ...payload.values };
         }
         return { ...stepObj };
@@ -185,10 +187,7 @@ export const setSingleStep = (state, payload) => {
     ...state,
     sequence,
     selectedSequence: newSelectedSequence,
-    selectedPattern:
-      state.selectedPattern.id === payload.patternId
-        ? undefined
-        : state.selectedPattern,
+    selectedPattern,
   };
 };
 /**
@@ -202,8 +201,8 @@ export const updateAllStepsOnBeat = (state, payload) => {
     pattern: state.selectedSequence.pattern.map((patObj) => {
       return {
         ...patObj,
-        steps: patObj.steps.map((stepObj, index) => {
-          if (index + 1 === state.countColumn) {
+        steps: patObj.steps.map((stepObj) => {
+          if (stepObj.id === state.countColumn) {
             return { ...stepObj, ...payload.values };
           }
           return { ...stepObj, focus: false };
