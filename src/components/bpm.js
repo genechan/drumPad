@@ -11,7 +11,10 @@ const BPM = ({ value, onChange }) => {
             https://en.scratch-wiki.info/wiki/Tempo_(value)
           </a>
         </p>
-        <p>But this number can be anything</p>
+        <p>
+          But this number can be anything.(Change BPM will stop the drum
+          machine)
+        </p>
       </div>
       <label htmlFor="bpm">
         BPM:&nbsp;
