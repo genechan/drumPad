@@ -47,7 +47,7 @@ const App = () => {
         selectedSequenceId={selectedSequence.id}
         onChangeSequence={onChangeSequence(dispatch)}
       />
-      <Sequence data={selectedSequence} />
+      <Sequence data={selectedSequence} onClickStep={onClickStep(dispatch)} />
     </div>
   );
 };
@@ -74,6 +74,15 @@ export const onChangeSequence = (dispatch) => {
     dispatch({
       type: Actions.SET_SELECTED_SEQUENCE,
       payload: Number(e.target.value),
+    });
+  };
+};
+
+export const onClickStep = (dispatch) => {
+  return (payload) => {
+    dispatch({
+      type: Actions.UPDATE_SINGLE_STEP,
+      payload,
     });
   };
 };
