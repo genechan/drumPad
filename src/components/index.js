@@ -3,4 +3,5 @@ import Pattern from "./pattern";
 import Step from "./step";
 import Controls from "./controls";
 import BPM from "./bpm";
-export { Sequence, Pattern, Step, Controls, BPM };
+import Legend from "./legend";
+export { Sequence, Pattern, Step, Controls, BPM, Legend };

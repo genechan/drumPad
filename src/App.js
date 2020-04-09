@@ -1,6 +1,6 @@
 import React from "react";
 import Actions from "./redux/actions";
-import { Sequence, Controls } from "./components";
+import { Sequence, Controls, Legend } from "./components";
 import { useDispatch, useSelector } from "react-redux";
 const App = () => {
   const dispatch = useDispatch();
@@ -48,6 +48,7 @@ const App = () => {
         onChangeSequence={onChangeSequence(dispatch)}
       />
       <Sequence data={selectedSequence} onClickStep={onClickStep(dispatch)} />
+      <Legend />
     </div>
   );
 };
