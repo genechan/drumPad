@@ -30,13 +30,6 @@ To run jest unit test
 yarn test
 ```
 
-To run cypress.io integration test.
-This will launch parcel localhost along with cypress. Cypress won't test a site unless it's running first.
-
-```sh
-yarn integration
-```
-
 To run Storybook demo / manual test
 
 ```sh
