@@ -103,6 +103,7 @@ export const setBPM = (state, payload) => {
   return {
     ...state,
     BPM,
+    isPlaying: false,
   };
 };
 /**
